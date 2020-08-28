@@ -1,0 +1,27 @@
+{
+  "help": {
+    "about": "Показ помощи",
+    "channels": ["бар", "игра"],
+    "embed": {
+      "title": "Я ваш бот-помощник, ниже приведены полезные ссылки и команды",
+      "color": "3DAEFF",
+      "author": {
+        "name": "Let me Play | YouTube"
+      },
+      "description": "[YouTube канал](https://www.youtube.com/channel/UCD2ydr9-agZAQBRhIONnydQ?sub_confirmation=1)\n[Официальный сайт](http://letmeplay.tv/)\n[Steam](https://steamcommunity.com/id/letmeplay_youtube)\n[Instagram](https://www.instagram.com/letmeplay_tv)\n[Twitter](https://twitter.com/letmeplay_tv)\n\n*Не забудь подписаться!*",
+      "thumbnail": "https://cdn.discordapp.com/icons/699851329123909702/a_86cd766ff4e0710c168627206ebad7a9.gif"
+    },
+    "commandListTitle": "Команды для бота"
+  },
+  "getmilitriss": {
+    "about": "чит-код",
+    "channels": ["бар", "игра"],
+    "image": {
+      "type": "random",
+      "db": {
+        "name": "animebase.csv",
+        "src": "link"
+      }
+    }
+  }
+}
