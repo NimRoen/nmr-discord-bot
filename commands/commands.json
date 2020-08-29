@@ -1,10 +1,9 @@
 {
   "help": {
     "about": "Показ помощи",
-    "channels": ["бар", "игра"],
+    "bind": ["main", "game"],
     "embed": {
       "title": "Я ваш бот-помощник, ниже приведены полезные ссылки и команды",
-      "color": "3DAEFF",
       "author": {
         "name": "Let me Play | YouTube"
       },
@@ -15,7 +14,7 @@
   },
   "getmilitriss": {
     "about": "чит-код",
-    "channels": ["бар", "игра"],
+    "bind": ["main", "game"],
     "image": {
       "type": "random",
       "db": {

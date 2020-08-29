@@ -5,10 +5,10 @@ const config = require('../config/config.json');
 const commands = require('./commands.json');
 
 module.exports.help = ({ message, entity }) => {
-  const { embed, commandListTitle } = entity;
+  const { embed, commandListTitle, color } = entity;
   const embedMessage = new MessageEmbed()
     .setTitle(embed.title)
-    .setColor(embed.color)
+    .setColor(color)
     .setAuthor(embed.author.name)
     .setDescription(`${embed.description}\n\n**${commandListTitle}**${Object.keys(commands).reduce((acc, command) => {
       return `${acc}\n\`${config.prefix}${command}\` ${commands[command].about}`;

@@ -1,3 +1,5 @@
+const bind = require('../config/bind.json');
+const colors = require('../config/colors.json');
 const { Utils } = require('../utils/utils');
 
 const data = require('./commands.json');
@@ -6,10 +8,19 @@ const { help } = require('./help');
 const { getmilitriss } = require('./getmilitriss');
 
 const commandProfiler = (handler, message, entity) => {
-  if (entity && Utils.isCommandChannelAccepted(message, entity)) {
-    const handlerProps = { message, entity };
+  const { channels, bindColors } = entity['bind'].reduce((acc, bindName) => ({
+    channels: [...acc.channels, bind.channels[bindName]],
+    bindColors: [...acc.bindColors, colors.channels[bindName] || null],
+  }), { channels: [], bindColors: [] });
+  const color = bindColors[0] || colors.default;
+  const newEntity = {
+    ...entity,
+    channels,
+    color,
+  };
 
-    handler(handlerProps);
+  if (entity && Utils.isCommandChannelAccepted(message, newEntity)) {
+    handler({ message, entity: newEntity });
   }
 };
 
