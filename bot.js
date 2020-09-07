@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 
 const config = require('./config/config.json');
+const { jobManager } = require('./jobs/manager');
 const { commands } = require('./commands/commands');
 
 const bot = new Discord.Client();
@@ -8,6 +9,8 @@ const bot = new Discord.Client();
 bot.on('ready', () => {
   console.log(bot.user.username + ' started');
   bot.generateInvite(['SEND_MESSAGES']).then(link => console.log(link));
+
+  jobManager.run(bot);
 });
 
 bot.on('message', msg => {

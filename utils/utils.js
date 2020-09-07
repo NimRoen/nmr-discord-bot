@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const Papa = require('papaparse');
 
-const getAllChannels = (message) => {
-  const { cache } = message.guild.channels;
+const getAllChannels = ({ bot, message }) => {
+  const { cache } = bot ? bot.channels : message.guild.channels;
 
   return [...cache.keys()].map(key => {
     const channelEntity = cache.get(key);
@@ -12,8 +12,8 @@ const getAllChannels = (message) => {
   });
 };
 
-const getChannelIdsByNames = (message, names) => {
-  const channels = getAllChannels(message);
+const getChannelIdsByNames = ({ bot, message, names }) => {
+  const channels = getAllChannels({ bot, message });
 
   return channels.map(channel => {
     const [id, name] = channel;

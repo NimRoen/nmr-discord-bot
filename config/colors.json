@@ -1,6 +1,7 @@
 {
   "default": "FFFFFF",
   "channels": {
-    "main": "3DAEFF"
+    "main": "3DAEFF",
+    "video": "FF0000"
   }
 }
