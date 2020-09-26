@@ -15,12 +15,12 @@ module.exports.jobManager = {
       names: [bind.channels.video],
     })[0] || undefined;
 
-    // cron.schedule("* * * * *", () => {
-    //   if (bot && channelId) {
+    cron.schedule("* * * * *", () => {
+      if (bot && channelId) {
         getVideo.youtube({ bot, channelId });
-    //   }
-    // });
+      }
+    });
 
-    // app.listen(3128);
+    app.listen(3128);
   },
 }

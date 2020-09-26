@@ -94,7 +94,7 @@ module.exports.getVideo = {
         }
       });
     
-      // updateLastTime();
+      updateLastTime();
     });
   },
 };
