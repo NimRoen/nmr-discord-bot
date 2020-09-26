@@ -10,17 +10,17 @@ const app = express();
 
 module.exports.jobManager = {
   run: bot => {
-    const channelId = Utils.getChannelIdsByNames({
+    const channelIds = Utils.getChannelIdsByNames({
       bot,
-      names: [bind.channels.video],
-    })[0] || undefined;
-
-    cron.schedule("* * * * *", () => {
-      if (bot && channelId) {
-        getVideo.youtube({ bot, channelId });
-      }
+      names: [bind.channels.video, bind.channels.test],
     });
 
-    app.listen(3128);
+    // cron.schedule("* * * * *", () => {
+    //   if (bot && channelIds.length > 0) {
+        getVideo.youtube({ bot, channelIds });
+    //   }
+    // });
+
+    // app.listen(3128);
   },
 }

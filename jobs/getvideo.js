@@ -16,6 +16,11 @@ const youtube = google.youtube({
   auth: config.GAPIkey,
 });
 
+const client = {
+  bot: null,
+  channelIds: [],
+};
+
 const channel = config.youtube;
 const filetime = `lastUpdate-${channel}`;
 
@@ -48,11 +53,66 @@ const updateLastTime = () => {
   });
 };
 
+const fetchVideo = (videoId, publishedAt, lastTime) => {
+  if (moment(publishedAt).diff(lastTime) > 0) {
+    getData('videos', {
+      part: part.SNIPPET,
+      id: videoId,
+    }, data => {
+      const { title, description, thumbnails } = data.items[0].snippet;
+      const shortDescription = description.split('\n\n')[0].trim();
+
+      const content = '@everyone';
+
+      const embed = new MessageEmbed()
+      .setTitle(title)
+      .setColor(colors.channels.video)
+      .setAuthor('Let me Play | Video content', '', `https://youtube.com/channel/${channel}`)
+      .setImage(thumbnails['maxres'].url)
+      .setThumbnail(config.avatar)
+      .setDescription(`${shortDescription}\n\nhttps://youtu.be/${videoId}`);
+
+      client.channelIds.map(channelId => {
+        client.bot.channels.fetch(channelId).then(value => {
+          value.send({ content, embed });
+        });
+      });
+    });
+  }
+};
+
 module.exports.getVideo = {
-  youtube: ({ bot, channelId }) => {
+  youtube: ({ bot, channelIds }) => {
+    client.bot = bot;
+    client.channelIds = channelIds;
+
     jobLastTime().then(value => {
       const lastTime = value;
-    
+
+      getData('search', {
+        part: part.SNIPPET,
+        channelId: channel,
+        eventType: 'live',
+        type: 'video',
+        maxResults: 3,
+      }, data => {
+        data.items.map(({ id: { videoId }, snippet: { publishedAt } }) => {
+          fetchVideo(videoId, publishedAt, lastTime);
+        });
+      });
+
+      getData('search', {
+        part: part.SNIPPET,
+        channelId: channel,
+        eventType: 'upcoming',
+        type: 'video',
+        maxResults: 3,
+      }, data => {
+        data.items.map(({ id: { videoId }, snippet: { publishedAt } }) => {
+          fetchVideo(videoId, publishedAt, lastTime);
+        });
+      });
+
       getData('channels', {
         part: part.CONTENT_DETAILS,
         id: channel,
@@ -63,38 +123,17 @@ module.exports.getVideo = {
           getData('playlistItems', {
             part: part.CONTENT_DETAILS,
             playlistId,
-            maxResults: 5,
+            maxResults: 3,
           }, data => {
-            data.items.map(({ contentDetails }) => {
-              if (moment(contentDetails.videoPublishedAt).diff(lastTime) > 0) {
-                const videoId = contentDetails.videoId;
-                
-                getData('videos', {
-                  part: part.SNIPPET,
-                  id: videoId,
-                }, data => {
-                  const { title, description, thumbnails } = data.items[0].snippet;
-                  const shortDescription = description.split('*****')[0].trim();
-    
-                  const embedMessage = new MessageEmbed()
-                  .setTitle(title)
-                  .setColor(colors.channels.video)
-                  .setAuthor('Let me Play | Video content', '', `https://youtube.com/channel/${channel}`)
-                  .setImage(thumbnails['maxres'].url)
-                  // .setThumbnail(embed.thumbnail)
-                  .setDescription(`${shortDescription}\n\nhttps://youtu.be/${videoId}`);
-
-                  bot.channels.fetch(channelId).then(value => {
-                    value.send(embedMessage);
-                  });
-                });
-              }
+            data.items.map(({ contentDetails: { videoId, videoPublishedAt } }) => {
+              fetchVideo(videoId, videoPublishedAt, lastTime);
             });
           });
         }
       });
-    
-      updateLastTime();
+
+
+      // updateLastTime();
     });
   },
 };
